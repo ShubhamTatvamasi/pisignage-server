@@ -1,0 +1,31 @@
+version: '3.1'
+services:
+  mongo:
+    image: mongo:4.2.2
+    restart: always
+    networks:
+      - overlay
+    volumes:
+      - db-data:/data/db
+
+  pisignage-server:
+    image: shubhamtatvamasi/pisignage-server:latest
+    build: .
+    restart: always
+    networks:
+      - overlay
+    ports:
+      - 80:80
+    environment:
+      MONGOLAB_URI: mongodb://mongo:27017/pisignage-server
+      PORT: 80
+      NODE_ENV: development
+    depends_on:
+      - mongo
+    # command: sleep infinity
+
+networks:
+  overlay:
+
+volumes:
+  db-data:
